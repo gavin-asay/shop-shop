@@ -7,43 +7,45 @@ export const storeSlice = createSlice({
 		categories: [],
 		currentCategory: '',
 		cart: [],
+		cartOpen: false,
 	},
 	reducers: {
-		updateProducts: ({ products }, action) => {
+		updateProducts: (state, action) => {
 			// redux toolkit dependencies take code that ostensibly mutates the state and instead creates a new state object
-			products = action.payload;
+			state.products = action.payload;
 		},
-		updateCategories: ({ categories }, action) => {
-			categories = action.payload;
+		updateCategories: (state, action) => {
+			state.categories = action.payload;
 		},
-		updateCurrentCategory: ({ currentCategory }, action) => {
-			currentCategory = action.payload;
+		updateCurrentCategory: (state, action) => {
+			state.currentCategory = action.payload;
 		},
-		addToCart: ({ cart }, action) => {
-			cart.push(action.payload);
+		addToCart: (state, action) => {
+			state.cart.push(action.payload);
+			if (!state.cartOpen) state.cartOpen = true;
 		},
-		addMultipletoCart: ({ cart }, action) => {
-			cart = cart.concat(action.payload);
+		addMultipletoCart: (state, action) => {
+			state.cart = state.cart.concat(action.payload);
 		},
-		removeFromCart: ({ cart, cartOpen }, action) => {
-			cart = cart.filter(product => product._id !== action.payload._id);
-			cartOpen = cart.length > 0;
+		removeFromCart: (state, action) => {
+			state.cart = state.cart.filter(product => product._id !== action.payload._id);
+			state.cartOpen = state.cart.length > 0;
 		},
-		updateCartQuantity: ({ cart, cartOpen }, action) => {
-			cartOpen = true;
-			cart = cart.map(product => {
+		updateCartQuantity: (state, action) => {
+			state.cartOpen = true;
+			state.cart = state.cart.map(product => {
 				if (action.payload._id === product._id) {
-					product.purchaseQuantity = action.purchaseQuantity;
+					product.purchaseQuantity = action.payload.purchaseQuantity;
 				}
 				return product;
 			});
 		},
-		clearCart: ({ cart, cartOpen }) => {
-			cart = [];
-			cartOpen = false;
+		clearCart: state => {
+			state.cart = [];
+			state.cartOpen = false;
 		},
-		toggleCart: ({ cartOpen }) => {
-			cartOpen = !cartOpen;
+		toggleCart: state => {
+			state.cartOpen = !state.cartOpen;
 		},
 	},
 });
@@ -58,7 +60,7 @@ export const {
 	updateCartQuantity,
 	clearCart,
 	toggleCart,
-} = storeSlice.actions;
+} = storeSlice.actions; // createSlice automatically creates storeSlice.actions
 
 export default storeSlice.reducer;
 
