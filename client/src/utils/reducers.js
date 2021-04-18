@@ -1,81 +1,145 @@
-import {
-	UPDATE_PRODUCTS,
-	UPDATE_CATEGORIES,
-	UPDATE_CURRENT_CATEGORY,
-	ADD_TO_CART,
-	ADD_MULTIPLE_TO_CART,
-	REMOVE_FROM_CART,
-	UPDATE_CART_QUANTITY,
-	CLEAR_CART,
-	TOGGLE_CART,
-} from './actions';
-import { useReducer } from 'react';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const reducer = (state, action) => {
-	switch (action.type) {
-		case UPDATE_PRODUCTS:
-			return {
-				...state,
-				products: [...action.products],
-			};
-		case UPDATE_CATEGORIES:
-			return {
-				...state,
-				categories: [...action.categories],
-			};
-		case UPDATE_CURRENT_CATEGORY:
-			return {
-				...state,
-				currentCategory: action.currentCategory,
-			};
-		case ADD_TO_CART:
-			return {
-				...state,
-				cartOpen: true,
-				cart: [...state.cart, action.product],
-			};
-		case ADD_MULTIPLE_TO_CART:
-			return {
-				...state,
-				cart: [...state.cart, ...action.products],
-			};
-		case REMOVE_FROM_CART:
-			let newState = state.cart.filter(product => {
-				return product._id !== action._id;
+export const storeSlice = createSlice({
+	name: 'store',
+	initialState: {
+		products: [],
+		categories: [],
+		currentCategory: '',
+		cart: [],
+	},
+	reducers: {
+		updateProducts: ({ products }, action) => {
+			// redux toolkit dependencies take code that ostensibly mutates the state and instead creates a new state object
+			products = action.payload;
+		},
+		updateCategories: ({ categories }, action) => {
+			categories = action.payload;
+		},
+		updateCurrentCategory: ({ currentCategory }, action) => {
+			currentCategory = action.payload;
+		},
+		addToCart: ({ cart }, action) => {
+			cart.push(action.payload);
+		},
+		addMultipletoCart: ({ cart }, action) => {
+			cart = cart.concat(action.payload);
+		},
+		removeFromCart: ({ cart, cartOpen }, action) => {
+			cart = cart.filter(product => product._id !== action.payload._id);
+			cartOpen = cart.length > 0;
+		},
+		updateCartQuantity: ({ cart, cartOpen }, action) => {
+			cartOpen = true;
+			cart = cart.map(product => {
+				if (action.payload._id === product._id) {
+					product.purchaseQuantity = action.purchaseQuantity;
+				}
+				return product;
 			});
+		},
+		clearCart: ({ cart, cartOpen }) => {
+			cart = [];
+			cartOpen = false;
+		},
+		toggleCart: ({ cartOpen }) => {
+			cartOpen = !cartOpen;
+		},
+	},
+});
 
-			return {
-				...state,
-				cartOpen: newState.length > 0,
-				cart: newState,
-			};
-		case UPDATE_CART_QUANTITY:
-			return {
-				...state,
-				cartOpen: true,
-				cart: state.cart.map(product => {
-					if (action._id === product._id) {
-						product.purchaseQuantity = action.purchaseQuantity;
-					}
-					return product;
-				}),
-			};
-		case CLEAR_CART:
-			return {
-				...state,
-				cartOpen: false,
-				cart: [],
-			};
-		case TOGGLE_CART:
-			return {
-				...state,
-				cartOpen: !state.cartOpen,
-			};
-		default:
-			return state;
-	}
-};
+export const {
+	updateProducts,
+	updateCategories,
+	updateCurrentCategory,
+	addToCart,
+	addMultipletoCart,
+	removeFromCart,
+	updateCartQuantity,
+	clearCart,
+	toggleCart,
+} = storeSlice.actions;
 
-export function useProductReducer(initialState) {
-	return useReducer(reducer, initialState);
-}
+export default storeSlice.reducer;
+
+// import {
+// 	UPDATE_PRODUCTS,
+// 	UPDATE_CATEGORIES,
+// 	UPDATE_CURRENT_CATEGORY,
+// 	ADD_TO_CART,
+// 	ADD_MULTIPLE_TO_CART,
+// 	REMOVE_FROM_CART,
+// 	UPDATE_CART_QUANTITY,
+// 	CLEAR_CART,
+// 	TOGGLE_CART,
+// } from './actions';
+// import { useReducer } from 'react';
+
+// export const reducer = (state, action) => {
+// 	switch (action.type) {
+// 		case UPDATE_PRODUCTS:
+// 			return {
+// 				...state,
+// 				products: [...action.products],
+// 			};
+// 		case UPDATE_CATEGORIES:
+// 			return {
+// 				...state,
+// 				categories: [...action.categories],
+// 			};
+// 		case UPDATE_CURRENT_CATEGORY:
+// 			return {
+// 				...state,
+// 				currentCategory: action.currentCategory,
+// 			};
+// 		case ADD_TO_CART:
+// 			return {
+// 				...state,
+// 				cartOpen: true,
+// 				cart: [...state.cart, action.product],
+// 			};
+// 		case ADD_MULTIPLE_TO_CART:
+// 			return {
+// 				...state,
+// 				cart: [...state.cart, ...action.products],
+// 			};
+// 		case REMOVE_FROM_CART:
+// 			let newState = state.cart.filter(product => {
+// 				return product._id !== action._id;
+// 			});
+
+// 			return {
+// 				...state,
+// 				cartOpen: newState.length > 0,
+// 				cart: newState,
+// 			};
+// 		case UPDATE_CART_QUANTITY:
+// 			return {
+// 				...state,
+// 				cartOpen: true,
+// 				cart: state.cart.map(product => {
+// 					if (action._id === product._id) {
+// 						product.purchaseQuantity = action.purchaseQuantity;
+// 					}
+// 					return product;
+// 				}),
+// 			};
+// 		case CLEAR_CART:
+// 			return {
+// 				...state,
+// 				cartOpen: false,
+// 				cart: [],
+// 			};
+// 		case TOGGLE_CART:
+// 			return {
+// 				...state,
+// 				cartOpen: !state.cartOpen,
+// 			};
+// 		default:
+// 			return state;
+// 	}
+// };
+
+// export function useProductReducer(initialState) {
+// 	return useReducer(reducer, initialState);
+// }
