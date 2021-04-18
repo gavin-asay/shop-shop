@@ -8,6 +8,6 @@ Redux was implemented with the `@reduxjs/toolkit` and `react-redux` packages. Th
 
 GitHub: https://github.com/gavin-asay/shop-shop
 
-Deployed App:
+Deployed App: https://morning-waters-16157.herokuapp.com/
 
 ![Screenshot of Shop-Shop](./shop-shop.png)
