@@ -3,7 +3,6 @@ import CartItem from '../CartItem';
 import Auth from '../../utils/auth';
 import './style.css';
 
-// import { useStoreContext } from '../../utils/GlobalState';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleCart, addMultipletoCart } from '../../utils/reducers';
 

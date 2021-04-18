@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useStoreContext } from '../../utils/GlobalState';
 import { removeFromCart, updateCartQuantity } from '../../utils/reducers';
 import { useDispatch } from 'react-redux';
 

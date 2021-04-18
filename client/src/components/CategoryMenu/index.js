@@ -5,8 +5,6 @@ import { useQuery } from '@apollo/react-hooks';
 import { QUERY_CATEGORIES } from '../../utils/queries';
 import { useSelector, useDispatch } from 'react-redux';
 
-// import { useStoreContext } from '../../utils/GlobalState';
-
 import { idbPromise } from '../../utils/helpers';
 
 function CategoryMenu() {
